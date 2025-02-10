@@ -1,7 +1,10 @@
-import { RouterProvider } from '@tanstack/react-router';
+import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { router } from './routes/__root';
+
+import { routeTree } from './routeTree.gen';
+
+const router = createRouter({ routeTree: routeTree });
 
 const rootElement = document.getElementById('app');
 if (!rootElement) {
