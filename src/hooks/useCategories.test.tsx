@@ -29,10 +29,15 @@ describe('useCategories', () => {
 
   it('カテゴリーを更新できる', () => {
     const { result } = renderHook(() => useCategories(), { wrapper });
+    let categoryId: string;
     
     act(() => {
       const category = result.current.addCategory('テクノロジー');
-      result.current.updateCategory(category.id, { name: '技術' });
+      categoryId = category.id;
+    });
+
+    act(() => {
+      result.current.updateCategory(categoryId, { name: '技術' });
     });
 
     expect(result.current.categories[0].name).toBe('技術');
@@ -40,10 +45,15 @@ describe('useCategories', () => {
 
   it('カテゴリーを削除できる', () => {
     const { result } = renderHook(() => useCategories(), { wrapper });
+    let categoryId: string;
     
     act(() => {
       const category = result.current.addCategory('テクノロジー');
-      result.current.deleteCategory(category.id);
+      categoryId = category.id;
+    });
+
+    act(() => {
+      result.current.deleteCategory(categoryId);
     });
 
     expect(result.current.categories).toHaveLength(0);

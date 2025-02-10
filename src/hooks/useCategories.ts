@@ -12,20 +12,19 @@ export const useCategories = () => {
       name,
       color
     };
-    setCategories(prev => [...prev, newCategory]);
+    setCategories([...categories, newCategory]);
     return newCategory;
   };
 
   const updateCategory = (id: string, updates: Partial<Omit<Category, 'id'>>) => {
-    setCategories(prev => 
-      prev.map(cat => 
-        cat.id === id ? { ...cat, ...updates } : cat
-      )
+    const newCategories = categories.map(cat => 
+      cat.id === id ? { ...cat, ...updates } : cat
     );
+    setCategories(newCategories);
   };
 
   const deleteCategory = (id: string) => {
-    setCategories(prev => prev.filter(cat => cat.id !== id));
+    setCategories(categories.filter(cat => cat.id !== id));
   };
 
   return {

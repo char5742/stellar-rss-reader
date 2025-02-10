@@ -3,10 +3,10 @@ import { atomWithStorage } from 'jotai/utils';
 import type { Feed, Category } from '../types/feed';
 
 // カテゴリーの永続化ストア
-export const categoriesAtom = atomWithStorage<Category[]>('categories-storage', []);
+export const categoriesAtom = atom<Category[]>([]);
 
 // フィードの永続化ストア
-export const feedsAtom = atomWithStorage<Feed[]>('feeds-storage', []);
+export const feedsAtom = atom<Feed[]>([]);
 
 // 選択中のカテゴリーID
 export const selectedCategoryIdAtom = atom<string | null>(null);
