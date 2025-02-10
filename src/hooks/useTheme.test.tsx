@@ -1,8 +1,8 @@
 import '@testing-library/react';
 import { describe, expect, it } from 'bun:test';
-import { renderHook, act } from '@testing-library/react';
-import { useTheme } from './useTheme';
+import { act, renderHook } from '@testing-library/react';
 import { Provider } from 'jotai';
+import { useTheme } from './useTheme';
 
 describe('useTheme', () => {
 	const wrapper = ({ children }: { children: React.ReactNode }) => (

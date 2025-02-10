@@ -1,8 +1,8 @@
 import '@testing-library/react';
 import { describe, expect, it } from 'bun:test';
 import { render } from '@testing-library/react';
-import { RootLayout } from './RootLayout';
 import { Provider } from 'jotai';
+import { RootLayout } from './RootLayout';
 
 describe('RootLayout', () => {
 	const renderWithProvider = (ui: React.ReactNode) => {

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
 	Link,
 	Outlet,
@@ -8,8 +7,8 @@ import {
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { RootLayout } from '../layouts/RootLayout';
-import { Index } from './index';
 import { About } from './about';
+import { Index } from './index';
 
 const rootRoute = createRootRoute({
 	component: RootLayout,
