@@ -11,7 +11,7 @@
 		"start": "vite",
 		"format": "biome check --write",
 		"lint": "biome lint",
-		"test": "bun test --preload ./src/test/setup.ts"
+		"test": "bun test"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
@@ -29,6 +29,7 @@
 		"@tanstack/react-router": "^1.102.1",
 		"@tanstack/router-devtools": "^1.102.1",
 		"jotai": "^2.11.3",
+		"nanoid": "^5.0.9",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0"
 	}
