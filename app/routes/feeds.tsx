@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { AddFeedForm } from '../components/AddFeedForm';
-import { CategoryManager } from '../components/CategoryManager';
-import { FeedList } from '../components/FeedList';
+import { AddFeedForm } from '~/components/AddFeedForm';
+import { CategoryManager } from '~/components/CategoryManager';
+import { FeedList } from '~/components/FeedList';
 
 export const Route = createFileRoute('/feeds')({
 	component: () => (

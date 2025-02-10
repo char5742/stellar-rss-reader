@@ -4,9 +4,9 @@ import {
 	feedsAtom,
 	filteredFeedsAtom,
 	selectedCategoryIdAtom,
-} from '../stores/feedStore';
-import type { Feed } from '../types/feed';
-import { getFeedMetadata } from '../utils/feed';
+} from '~/stores/feedStore';
+import type { Feed } from '~/types/feed';
+import { getFeedMetadata } from '~/utils/feed';
 
 export const useFeeds = () => {
 	const [feeds, setFeeds] = useAtom(feedsAtom);

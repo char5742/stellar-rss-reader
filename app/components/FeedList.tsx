@@ -1,10 +1,10 @@
 import { useAtom } from 'jotai';
 import { useState } from 'react';
-import { deleteFeed, updateFeed } from '../application/feed/useCases';
-import { useCategories } from '../hooks/useCategories';
-import { useFeeds } from '../hooks/useFeeds';
-import { feedManagementAtom } from '../stores/feedStore';
-import type { Feed } from '../types/feed';
+import { deleteFeed, updateFeed } from '~/application/feed/useCases';
+import { useCategories } from '~/hooks/useCategories';
+import { useFeeds } from '~/hooks/useFeeds';
+import { feedManagementAtom } from '~/stores/feedStore';
+import type { Feed } from '~/types/feed';
 
 export const FeedList = () => {
 	const { filteredFeeds, selectedCategoryId, selectCategory } = useFeeds();

@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai';
 import { nanoid } from 'nanoid';
-import { categoriesAtom } from '../stores/feedStore';
-import type { Category } from '../types/feed';
+import { categoriesAtom } from '~/stores/feedStore';
+import type { Category } from '~/types/feed';
 
 export const useCategories = () => {
 	const [categories, setCategories] = useAtom(categoriesAtom);

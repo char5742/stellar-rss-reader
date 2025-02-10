@@ -1,6 +1,6 @@
-import type { Feed } from '../../../types/feed';
-import { getFeedMetadata } from '../../../utils/feed';
-import { FeedError } from '../../../utils/feed';
+import type { Feed } from '~/types/feed';
+import { getFeedMetadata } from '~/utils/feed';
+import { FeedError } from '~/utils/feed';
 
 export const updateFeed = async (feed: Feed): Promise<Feed> => {
 	try {

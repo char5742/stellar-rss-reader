@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import type { Category, Feed } from '../types/feed';
+import type { Category, Feed } from '~/types/feed';
 
 // カテゴリーの永続化ストア
 export const categoriesAtom = atom<Category[]>([]);

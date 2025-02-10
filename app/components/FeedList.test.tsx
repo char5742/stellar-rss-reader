@@ -8,8 +8,8 @@ import {
 } from '@testing-library/react';
 import { Provider } from 'jotai';
 import { useHydrateAtoms } from 'jotai/utils';
-import { categoriesAtom, feedsAtom } from '../stores/feedStore';
-import * as feedUtils from '../utils/feed';
+import { categoriesAtom, feedsAtom } from '~/stores/feedStore';
+import * as feedUtils from '~/utils/feed';
 import { FeedList } from './FeedList';
 
 const mockFeeds = [

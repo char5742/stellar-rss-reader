@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-router';
 import { render } from '@testing-library/react';
 import { Provider } from 'jotai';
-import { routeTree } from '../routeTree.gen';
+import { routeTree } from '~/routeTree.gen';
 import { RootLayout } from './RootLayout';
 
 describe('RootLayout', () => {

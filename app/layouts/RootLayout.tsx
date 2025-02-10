@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { useTheme } from '../hooks/useTheme';
+import { useTheme } from '~/hooks/useTheme';
 
 interface RootLayoutProps {
 	children: React.ReactNode;

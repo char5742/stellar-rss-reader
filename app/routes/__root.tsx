@@ -2,9 +2,9 @@ import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { Meta, Scripts } from '@tanstack/start';
 // biome-ignore lint/style/useImportType: <explanation>
 import * as React from 'react'; // Changed from "import type * as React"hanged from "import type * as React"
+import { RootLayout } from '~/layouts/RootLayout';
 import appCss from '~/styles/app.css?url';
-import { RootLayout } from '../layouts/RootLayout';
-import { seo } from '../utils/seo';
+import { seo } from '~/utils/seo';
 
 export const Route = createRootRoute({
 	head: () => ({
