@@ -19,3 +19,33 @@ export const filteredFeedsAtom = atom((get) => {
 
 	return feeds.filter((feed) => feed.categoryIds.includes(selectedCategoryId));
 });
+
+// アクションを含むフィード管理atom
+export const feedManagementAtom = atom(
+	(get) => get(feedsAtom),
+	(get, set, action: { type: 'update' | 'delete'; payload: Feed | string }) => {
+		const feeds = get(feedsAtom);
+
+		switch (action.type) {
+			case 'update': {
+				const updatedFeed = action.payload as Feed;
+				set(
+					feedsAtom,
+					feeds.map((feed) =>
+						feed.id === updatedFeed.id ? updatedFeed : feed,
+					),
+				);
+				break;
+			}
+
+			case 'delete': {
+				const feedId = action.payload as string;
+				set(
+					feedsAtom,
+					feeds.filter((feed) => feed.id !== feedId),
+				);
+				break;
+			}
+		}
+	},
+);
