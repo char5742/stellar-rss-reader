@@ -57,8 +57,13 @@ export const AddFeedForm = () => {
 			</div>
 
 			<div className="mb-4">
-				<label className="block text-sm font-medium mb-1">カテゴリー</label>
-				<div className="flex flex-wrap gap-2">
+				<label
+					className="block text-sm font-medium mb-1"
+					htmlFor="category-selection"
+				>
+					カテゴリー
+				</label>
+				<div className="flex flex-wrap gap-2" id="category-selection">
 					{categories.map((category) => (
 						<label key={category.id} className="inline-flex items-center">
 							<input

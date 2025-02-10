@@ -30,7 +30,16 @@ const mockCategories = [
 	{ id: 'cat2', name: 'Category 2', color: '#00ff00' },
 ];
 
-const HydrateAtoms = ({ initialValues, children }: any) => {
+const HydrateAtoms = ({
+	initialValues,
+	children,
+}: {
+	initialValues: Array<
+		| [typeof categoriesAtom, typeof mockCategories]
+		| [typeof feedsAtom, typeof mockFeeds]
+	>;
+	children: React.ReactNode;
+}) => {
 	useHydrateAtoms(initialValues);
 	return children;
 };

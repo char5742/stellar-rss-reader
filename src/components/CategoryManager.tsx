@@ -112,12 +112,14 @@ export const CategoryManager = () => {
 								</div>
 								<div className="flex space-x-2">
 									<button
+										type="button"
 										onClick={() => setEditingCategory(category)}
 										className="text-blue-500 hover:text-blue-600"
 									>
 										編集
 									</button>
 									<button
+										type="button"
 										onClick={() => deleteCategory(category.id)}
 										className="text-red-500 hover:text-red-600"
 									>
