@@ -7,5 +7,5 @@ registerDOM();
 
 // Cleanup after each test
 afterEach(() => {
-  cleanup();
+	cleanup();
 });
