@@ -1,306 +1,188 @@
-
-## **ディレクトリ構成（サンプル）**
-
-```
+```plaintext
 app/
- ┣ domain/
- ┃  ┣ feed/
- ┃  ┃  ┣ Feed.ts             // エンティティ(ドメインモデル)
- ┃  ┃  ┣ IFeedRepository.ts  // リポジトリインターフェイス
- ┃  ┃  ┗ index.ts            // エクスポートまとめ
- ┃  ┣ article/
- ┃  ┣ user/
- ┃  ┗ ...
- ┣ application/
- ┃  ┣ feed/
- ┃  ┃  ┣ useCases/
- ┃  ┃  ┃  ┣ FetchFeeds.ts
- ┃  ┃  ┃  ┣ AddFeed.ts
- ┃  ┃  ┃  ┗ ...
- ┃  ┃  ┗ index.ts
- ┃  ┣ article/
- ┃  ┣ user/
- ┃  ┗ ...
- ┣ infrastructure/
- ┃  ┣ firebase/
- ┃  ┃  ┣ firebaseConfig.ts   // Firebase初期化
- ┃  ┃  ┣ FeedRepository.ts   // IFeedRepository実装例
- ┃  ┃  ┗ ...
- ┃  ┣ rss/
- ┃  ┣ ...
- ┣ interface/
- ┃  ┣ router/
- ┃  ┃  ┣ rootRoute.ts
- ┃  ┃  ┣ feedRoute.ts
- ┃  ┃  ┗ router.ts           // Tanstack Routerのエントリポイント
- ┃  ┣ components/
- ┃  ┃  ┣ FeedList.tsx
- ┃  ┃  ┗ ...
- ┃  ┣ pages/
- ┃  ┃  ┗ ...
- ┃  ┣ hooks/
- ┃  ┗ ...
- ┣ store/
- ┃  ┣ feedAtom.ts            // Jotaiの状態管理
- ┃  ┗ ...
- ┣ App.tsx
- ┣ main.tsx
- ┗ index.html
-```
-
-- **domain**: ビジネスロジック（エンティティ・リポジトリインターフェイスなど）。DDDにおけるドメイン層。
-- **application**: ユースケース。ドメインの振る舞いを組み合わせ、アプリケーションとして「何を実行するか」をまとめる層。
-- **infrastructure**: 実際のデータ取得（Firebase, RSSパーサー, 外部API）などの実装詳細。ドメイン層のリポジトリをここで具象化。
-- **interface**（プレゼンテーション層）: ReactコンポーネントやルーティングなどUI周り。
-- **store**: グローバルな状態管理（Jotai）関連。
-
----
-
-## **サンプルコード**
-
-### 1. **Domain層**: `src/domain/feed/Feed.ts`
-
-```ts
-// src/domain/feed/Feed.ts
-
-export type FeedId = string;
-
-export type Feed = {
-  id: FeedId;
-  title: string;
-  url: string;
-  categoryIds: string[];
-  // 必要に応じて拡張
-};
-```
-
-```ts
-// src/domain/feed/IFeedRepository.ts
-
-import { Feed, FeedId } from './Feed';
-
-export interface IFeedRepository {
-  getAllFeeds(): Promise<Feed[]>;
-  getFeedById(id: FeedId): Promise<Feed | null>;
-  addFeed(feed: Feed): Promise<void>;
-  removeFeed(id: FeedId): Promise<void>;
-  // 必要に応じて拡張
-}
-```
-
-### 2. **Application層**: `src/application/feed/useCases/FetchFeeds.ts`
-
-```ts
-// src/application/feed/useCases/FetchFeeds.ts
-import { IFeedRepository } from '~/domain/feed/IFeedRepository';
-import { Feed } from '~/domain/feed/Feed';
-
-// 「最新のフィード一覧を取得する」ユースケース
-export const fetchFeeds = (repo: IFeedRepository) => async (): Promise<Feed[]> => {
-  // 関数型プログラミング的に引数(repo)を部分適用して利用
-  // ここでドメイン知識に基づくバリデーションなどを行うこともある
-  return await repo.getAllFeeds();
-};
-```
-
-```ts
-// src/application/feed/useCases/AddFeed.ts
-import { IFeedRepository } from '~/domain/feed/IFeedRepository';
-import { Feed } from '~/domain/feed/Feed';
-
-// 「新規フィードを追加する」ユースケース
-export const addFeed = (repo: IFeedRepository) => async (feed: Feed): Promise<void> => {
-  // ドメインルールの検証など行う
-  if (!feed.url.startsWith('http')) {
-    throw new Error('Invalid URL');
-  }
-  return await repo.addFeed(feed);
-};
-```
-
-### 3. **Infrastructure層**: `src/infrastructure/firebase/FeedRepository.ts`
-
-```ts
-// src/infrastructure/firebase/FeedRepository.ts
-import { IFeedRepository } from '~/domain/feed/IFeedRepository';
-import { Feed, FeedId } from '~/domain/feed/Feed';
-import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
-import { db } from './firebaseConfig'; // Firebaseの初期化済みfirestoreインスタンス
-
-export class FirebaseFeedRepository implements IFeedRepository {
-  async getAllFeeds(): Promise<Feed[]> {
-    const snapshot = await getDocs(collection(db, 'feeds'));
-    const feeds: Feed[] = [];
-    snapshot.forEach((docSnap) => {
-      const data = docSnap.data() as Feed;
-      feeds.push({ ...data, id: docSnap.id });
-    });
-    return feeds;
-  }
-
-  async getFeedById(id: FeedId): Promise<Feed | null> {
-    // doc取得処理など実装
-    return null;
-  }
-
-  async addFeed(feed: Feed): Promise<void> {
-    await setDoc(doc(collection(db, 'feeds')), feed);
-  }
-
-  async removeFeed(id: FeedId): Promise<void> {
-    await deleteDoc(doc(db, 'feeds', id));
-  }
-}
-```
-
-```ts
-// src/infrastructure/firebase/firebaseConfig.ts
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-
-const firebaseConfig = {
-  // your config
-};
-
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-```
-
-### 4. **Store (Jotai)**: `src/store/feedAtom.ts`
-
-```ts
-import { atom } from 'jotai';
-import { Feed } from '~/domain/feed/Feed';
-
-export const feedListAtom = atom<Feed[]>([]);
-```
-
-- グローバルに管理したい状態（フィード一覧など）をAtomとして定義。
-- ターゲットが限られている場合は、コンポーネント直下の`useState`で済ませてもOK。
-
-### 5. **Interface層 (UI)**
-
-#### **5.1 ルーティング**: `src/interface/router/router.ts`
-
-```ts
-// src/interface/router/router.ts
-import { createReactRouter } from '@tanstack/react-router';
-import { rootRoute } from './rootRoute';
-import { feedRoute } from './feedRoute';
-
-export const router = createReactRouter({
-  routeTree: rootRoute.addChildren([feedRoute]),
-});
-```
-
-```tsx
-// src/interface/router/rootRoute.ts
-import { createRouteConfig } from '@tanstack/react-router';
-
-export const rootRoute = createRouteConfig({
-  component: () => <div>Root Layout</div>,
-});
-```
-
-```tsx
-// src/interface/router/feedRoute.ts
-import { createRouteConfig } from '@tanstack/react-router';
-import { FeedList } from '~/components/FeedList';
-
-export const feedRoute = createRouteConfig({
-  path: '/feeds',
-  component: FeedList,
-});
-```
-
-#### **5.2 コンポーネント**: `src/interface/components/FeedList.tsx`
-
-```tsx
-import React, { useEffect } from 'react';
-import { useAtom } from 'jotai';
-import { feedListAtom } from '~/store/feedAtom';
-import { fetchFeeds } from '~/application/feed/useCases/FetchFeeds';
-import { FirebaseFeedRepository } from '~/infrastructure/firebase/FeedRepository';
-
-const repo = new FirebaseFeedRepository();
-
-export function FeedList() {
-  const [feeds, setFeeds] = useAtom(feedListAtom);
-
-  useEffect(() => {
-    // コンポーネントマウント時にフィードを取得
-    const loadFeeds = async () => {
-      const result = await fetchFeeds(repo)();
-      setFeeds(result);
-    };
-    loadFeeds();
-  }, [setFeeds]);
-
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Feed List</h1>
-      <ul className="space-y-4">
-        {feeds.map((feed) => (
-          <li key={feed.id} className="p-4 border rounded shadow-sm">
-            <h2 className="text-xl font-semibold">{feed.title}</h2>
-            <p>{feed.url}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-```
-
-- `fetchFeeds`ユースケース（application層）を呼び出し、結果を `feedListAtom` に格納。
-- `FirebaseFeedRepository`（infrastructure層）を注入して利用。
-
-### 6. **エントリポイント**: `src/main.tsx`
-
-```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { RouterProvider } from '@tanstack/react-router';
-import { router } from './interface/router/router';
-import './index.css'; // TailwindのCSS( PostCSS経由で読み込み )
-import { App } from './App'; // 全体Layoutなど
-
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <RouterProvider router={router}>
-      <App />
-    </RouterProvider>
-  </React.StrictMode>
-);
+ ┣ feed/
+ ┃   ┣ domain/
+ ┃   ┃   ┣ entities/
+ ┃   ┃   ┣ services/
+ ┃   ┃   ┣ events/
+ ┃   ┃   ┗ IFeedRepository.ts
+ ┃   ┣ application/
+ ┃   ┃   ┣ useCases/
+ ┃   ┃   ┗ subscribers/
+ ┃   ┣ infrastructure/
+ ┃   ┃   ┗ FeedRepository.ts
+ ┃   ┗ interface/
+ ┃       ┣ router/
+ ┃       ┣ components/
+ ┃       ┣ hooks/
+ ┃       ┣ store/
+ ┃       ┗ pages/
+ ┣ article/
+ ┃   ┣ domain/
+ ┃   ┣ application/
+ ┃   ┣ infrastructure/
+ ┃   ┗ interface/
+ ┣ user/
+ ┃   ┣ domain/
+ ┃   ┣ application/
+ ┃   ┣ infrastructure/
+ ┃   ┗ interface/
+ ┗ shared/
+     ┣ domain/
+     ┣ application/
+     ┣ infrastructure/
+     ┗ interface/
 ```
 
 ---
 
-## **ポイント**
+## 1. 機能ごとにディレクトリをまとめる狙い
 
-1. **DDD/Clean Architecture**
-   - ドメイン（ビジネスロジック）を **`domain/`** にまとめ、インターフェイス（`IFeedRepository`など）を定義する。
-   - それらを呼び出すユースケース（`application/`）で実際の「操作（UseCase）」をまとめる。
-   - インフラやUIが変わっても、ドメイン・ユースケースは変更の影響を受けにくくなる。
-
-2. **関数型プログラミング**
-   - ユースケースを「純粋関数の集まり」のように扱う（リポジトリなどの依存は引数経由で渡す）。
-   - 副作用を極力少なくし、テストしやすい形にする。
-
-3. **データフロー**
-   - UI（Reactコンポーネント）はユースケースを呼び出すことでインフラにアクセス。
-   - 取得したデータを Jotai の Atom（`feedAtom`など）に保存し、コンポーネントはそれを監視して自動レンダリング。
-   - **Tanstack Router** を使い、各ページ（ルート）ごとに表示コンポーネントを切り替え。
-
-4. **Tailwind CSS**
-   - `index.css` や各コンポーネントで Tailwind のユーティリティクラスを使用。
-   - デザインポリシーに合わせてカスタムクラスを設定してもよい。
+- 「feed」「article」「user」といった**機能単位**（またはサブドメイン単位）で上下のレイヤーを完結させる構成です。変更対象のフォルダを的確に絞れて、保守が容易になります。
+- それぞれの機能ディレクトリ（例: `feed/`）の下に、DDDにおける**domain / application / infrastructure / interface**をすべて含むため、機能内の依存関係を見通しやすくなります。
+- さらに、複数機能で使い回す共通ロジックは `shared/` に置くことで、重複を避けつつ、肥大化を防ぐことができます。
 
 ---
 
-## **まとめ**
+## 2. 各フォルダの役割
 
-- DDD/Clean Architecture を意識してフォルダ・依存関係を整理することで、機能追加や変更に強い構成を実現します。  
-- 関数型プログラミングの発想で「ユースケースを純粋関数化」し、テスト性・可読性の向上を図れます。  
-- **Firebase (Firestore)** をインフラ層とし、UI は **React (Tanstack Router)**、状態管理に **Jotai**、スタイリングに **Tailwind** を使用する構成です。  
-- 大まかな骨格（エンティティ・リポジトリ・ユースケース・UI のつなぎ）を把握するためのサンプルコードなので、実際の要件や運用に合わせてカスタマイズしてください。
+### 2.1. domain
+
+- **`domain/entities`**  
+  - エンティティ（集約ルート含む）や値オブジェクトを定義します。  
+  - バリデーションや不変条件など、「ビジネスルールの中心」をエンティティに閉じ込めてください。
+
+- **`domain/services`**  
+  - エンティティ同士のやり取りや、複雑なビジネスロジックを扱う**ドメインサービス**を定義します。  
+  - 単一エンティティで完結しない場合や、外部計算を伴う場合に利用します。
+
+- **`domain/events`**  
+  - その機能に特化した**ドメインイベント**を定義します。  
+  - 例: `FeedCreatedEvent` / `FeedDeletedEvent` など。アプリケーション層に通知し、他集約や外部サービスとの連携を促します。
+
+- **`IFeedRepository.ts`** (あるいは `IArticleRepository.ts` など)  
+  - ドメイン層で必要とされるリポジトリの**インターフェイス**を定義し、インフラ層で実装を行います。  
+  - エンティティや値オブジェクトとやり取りするため、型定義はドメイン側が保持します。
+
+#### ポイント
+1. エンティティは「ドメインルール・整合性」を保つ中心  
+2. **不変条件**はエンティティ自身が破れないように、コンストラクタやメソッドでチェック  
+3. ドメインイベント発行のトリガーは、エンティティのメソッド内やユースケース内で行う形が多い  
+
+---
+
+### 2.2. application
+
+- **`application/useCases/`**  
+  - ユースケース単位のロジックを配置します。  
+  - リポジトリを介してエンティティを操作し、必要に応じて**ドメインイベントを発行**します。  
+  - ここではビジネスルールの中心は持たず、ドメイン層を呼び出しオーケストレーションする役割だけを担います。
+
+- **`application/subscribers/`**  
+  - ドメインイベント（例えば `FeedCreatedEvent`）を購読し、外部サービスへの通知や、他ドメインを呼び出す処理などを行います。  
+  - イベント駆動で疎結合を保つため、ユースケース内やイベントバス等で発行されるイベントをこちらでハンドリングします。
+
+#### ポイント
+1. ユースケースは**アプリケーションサービス**として、ドメイン層を使って**何を実行するか**をまとめる  
+2. トランザクション管理、イベント発行の契機などを一手に引き受ける  
+3. 複数のドメインサービスやリポジトリ呼び出しを組み合わせる
+
+---
+
+### 2.3. infrastructure
+
+- **`FeedRepository.ts`** (例)  
+  - `IFeedRepository` の具体実装を記述します。FirebaseやSQL、REST APIなど、技術的な詳細を扱います。  
+  - ドメイン側の`Feed`エンティティと**永続化用データ構造**の相互変換を行い、不整合がないように注意してください。  
+
+#### ポイント
+1. **外部サービスやDBとの接続**はインフラ層に隔離し、ドメイン層から直接アクセスさせない  
+2. リポジトリインターフェイスが変わらない限り、**実装の変更（DB→API）があってもドメイン層に影響しない**  
+3. 大規模になった際、モックリポジトリや別実装（例: ローカルキャッシュ）を差し替えやすくなる  
+
+---
+
+### 2.4. interface
+
+- **`interface/router/`**  
+  - ルーティングの定義をまとめます。React RouterやTanStack Routerなどを用いて、画面遷移を制御します。
+
+- **`interface/components/`**  
+  - UIを構築するReactコンポーネントを配置します。  
+  - ユースケースを呼び出す**イベントハンドラ**を組み込み、ユーザー操作→アプリケーション層へ処理委譲という流れを作ります。  
+
+- **`interface/hooks/`**  
+  - Reactのカスタムフックを配置します。アトミックなロジックや、複数コンポーネントで共通するUIロジックをここへ分離します。
+
+- **`interface/store/`**  
+  - 状態管理ツール（Redux, Jotai, Recoilなど）を使う際に、**UI専用のグローバルState**を保持する仕組みをここへまとめます。  
+  - DDDのドメイン状態とは別に、あくまで「表示や操作中の状態管理」というUI側の関心に特化します。  
+
+- **`interface/pages/`**  
+  - 大枠のページコンポーネントやルートエントリーと紐づくUI要素を置きます。  
+  - ルーティングで直接呼び出される単位になりやすいです。
+
+#### ポイント
+1. **UIレイヤーはできるだけアプリケーションロジックを持たず、ユースケースを呼び出すだけ**にとどめる  
+2. コンポーネントは“見た目”と“アクションのきっかけ”を担い、ビジネスルールはドメイン or アプリケーション層に閉じ込める  
+3. グローバルState（UI用）とドメインエンティティを混同しない  
+
+---
+
+## 3. shared ディレクトリの使い方
+
+- **`shared/domain/`**  
+  - 複数の機能（feed, article, userなど）で共通利用したい、汎用的な値オブジェクトやユーティリティドメインロジックを置きます。  
+  - 例: 日付や貨幣を扱うValueObjectや、共通のドメインサービスなど。
+
+- **`shared/application/`**  
+  - 全機能から共通して呼ばれる処理があれば置きます。  
+  - ただし乱用すると、ここが**巨大な“雑多フォルダ”**になりがちなので最小限にしてください。
+
+- **`shared/infrastructure/`**  
+  - ロガーやAPIクライアントなど、横断的なインフラ要素をまとめます。  
+  - 例: Axiosインスタンスの設定、AWS SDKの初期設定など。
+
+- **`shared/interface/`**  
+  - 全体で共有するUIコンポーネント（デザインシステム的なAtomic Components等）や、ルート定義など。  
+  - UI全域で使うレイアウトや共通フックを置いてもかまいません。
+
+#### ポイント
+1. **容易に共通化しすぎず、本当に複数ドメイン（機能）で使うかを判断**してから配置する  
+2. 「各機能で切り離しておきたいもの」は `shared/` に入れず、あくまで**横断的**な性質のものだけを集める  
+
+---
+
+## 4. より良い運用のためのポイント
+
+1. **ディレクトリの命名ルールを徹底する**  
+   - ファイル/クラス名も含めて、名前がブレると可読性が下がるため、`FeedRepository.ts` のように一貫した命名ポリシーを決める。
+
+2. **domainとinfrastructureを厳密に依存方向を分離する**  
+   - `domain` → `infrastructure` の直接参照を避け、`infrastructure`から`domain`は参照してもよいが、その逆はしない。  
+   - リポジトリインターフェイスは `domain/` に置き、実装は `infrastructure/` に置くことで、依存方向を守る。
+
+3. **ユースケースとUIイベントハンドラの結合度を下げる**  
+   - Reactコンポーネントから直接ユースケースを呼び出して問題ありませんが、`dependencies`（リポジトリやイベントパブリッシャなど）を引数で注入できる設計にしておくと、テストや将来のアーキ変更に強い。
+
+4. **ドメインイベントを活用した拡張性**  
+   - 例えば`FeedCreatedEvent`を発行し、購読側でメール送信やログ記録を行う。新機能を追加するときも、ドメインイベントの購読ハンドラを追加するだけで済み、既存ユースケースに影響を与えにくい。
+
+5. **ディレクトリをさらに細分化しすぎない**  
+   - 大規模プロジェクトの場合は階層化が増えやすいですが、過度に細分化すると逆に混乱することがあります。必要最小限の深さに留めてください。
+
+---
+
+## 5. この構成のメリット
+
+1. **機能単位で“縦割り”されている**  
+   - 機能ごとにドメイン・アプリケーション・インフラ・UIが閉じているので、変更範囲を追いやすい。  
+   - 新規機能を追加する際も、同じ構成でフォルダを追加すればよく、拡張性が高い。
+
+2. **DDDの原則（レイヤー分割・ドメイン中心）と両立**  
+   - domain/application/infrastructure/interfaceというレイヤーを機能内に閉じ込める形なので、ドメインモデルは独立性を保ちつつ、UIやインフラとの関係を明確にできます。
+
+3. **疎結合と再利用のバランス**  
+   - 頻繁に共通化が必要なものは `shared/` に置き、そうでない機能特有のものは各機能フォルダに留める。  
+   - これにより可読性・再利用性のバランスが取りやすくなります。
+
