@@ -92,8 +92,8 @@ export interface IFeedRepository {
 
 ```ts
 // src/application/feed/useCases/FetchFeeds.ts
-import { IFeedRepository } from '../../../domain/feed/IFeedRepository';
-import { Feed } from '../../../domain/feed/Feed';
+import { IFeedRepository } from '~/domain/feed/IFeedRepository';
+import { Feed } from '~/domain/feed/Feed';
 
 // 「最新のフィード一覧を取得する」ユースケース
 export const fetchFeeds = (repo: IFeedRepository) => async (): Promise<Feed[]> => {
@@ -105,8 +105,8 @@ export const fetchFeeds = (repo: IFeedRepository) => async (): Promise<Feed[]> =
 
 ```ts
 // src/application/feed/useCases/AddFeed.ts
-import { IFeedRepository } from '../../../domain/feed/IFeedRepository';
-import { Feed } from '../../../domain/feed/Feed';
+import { IFeedRepository } from '~/domain/feed/IFeedRepository';
+import { Feed } from '~/domain/feed/Feed';
 
 // 「新規フィードを追加する」ユースケース
 export const addFeed = (repo: IFeedRepository) => async (feed: Feed): Promise<void> => {
@@ -122,8 +122,8 @@ export const addFeed = (repo: IFeedRepository) => async (feed: Feed): Promise<vo
 
 ```ts
 // src/infrastructure/firebase/FeedRepository.ts
-import { IFeedRepository } from '../../domain/feed/IFeedRepository';
-import { Feed, FeedId } from '../../domain/feed/Feed';
+import { IFeedRepository } from '~/domain/feed/IFeedRepository';
+import { Feed, FeedId } from '~/domain/feed/Feed';
 import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig'; // Firebaseの初期化済みfirestoreインスタンス
 
@@ -170,7 +170,7 @@ export const db = getFirestore(app);
 
 ```ts
 import { atom } from 'jotai';
-import { Feed } from '../domain/feed/Feed';
+import { Feed } from '~/domain/feed/Feed';
 
 export const feedListAtom = atom<Feed[]>([]);
 ```
@@ -205,7 +205,7 @@ export const rootRoute = createRouteConfig({
 ```tsx
 // src/interface/router/feedRoute.ts
 import { createRouteConfig } from '@tanstack/react-router';
-import { FeedList } from '../components/FeedList';
+import { FeedList } from '~/components/FeedList';
 
 export const feedRoute = createRouteConfig({
   path: '/feeds',
@@ -218,9 +218,9 @@ export const feedRoute = createRouteConfig({
 ```tsx
 import React, { useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { feedListAtom } from '../../store/feedAtom';
-import { fetchFeeds } from '../../application/feed/useCases/FetchFeeds';
-import { FirebaseFeedRepository } from '../../infrastructure/firebase/FeedRepository';
+import { feedListAtom } from '~/store/feedAtom';
+import { fetchFeeds } from '~/application/feed/useCases/FetchFeeds';
+import { FirebaseFeedRepository } from '~/infrastructure/firebase/FeedRepository';
 
 const repo = new FirebaseFeedRepository();
 
