@@ -1,0 +1,21 @@
+{
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "search.exclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": ".vscode/.copilot-commit-message-instructions.md"
+    }
+  ],
+  "explorer.fileNesting.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.biome": "explicit"
+  },
+}
