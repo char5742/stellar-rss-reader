@@ -36,7 +36,6 @@ export const FeedList = () => {
 		if (!window.confirm('このフィードを削除してもよろしいですか？')) {
 			return;
 		}
-
 		try {
 			await deleteFeed(feedId);
 			dispatch({ type: 'delete', payload: feedId });
@@ -46,25 +45,24 @@ export const FeedList = () => {
 	};
 
 	return (
-		<div className="p-4">
-			<div className="flex justify-between items-center mb-4">
-				<div className="flex-grow">
-					<label className="block text-sm font-medium mb-2">
-						カテゴリーでフィルター
-						<select
-							value={selectedCategoryId || ''}
-							onChange={(e) => selectCategory(e.target.value || null)}
-							className="w-full md:w-64 p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700"
-						>
-							<option value="">すべて表示</option>
-							{categories.map((category) => (
-								<option key={category.id} value={category.id}>
-									{category.name}
-								</option>
-							))}
-						</select>
-					</label>
-				</div>
+		<main className="p-4">
+			<header className="flex justify-between items-center mb-4">
+				<label className="flex-grow block text-sm font-medium mb-2">
+					カテゴリーでフィルター
+					<select
+						value={selectedCategoryId || ''}
+						onChange={(e) => selectCategory(e.target.value || null)}
+						className="w-full md:w-64 p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700"
+					>
+						<option value="">すべて表示</option>
+						{categories.map((category) => (
+							<option key={category.id} value={category.id}>
+								{category.name}
+							</option>
+						))}
+					</select>
+				</label>
+
 				<button
 					type="button"
 					onClick={handleRefreshAll}
@@ -86,23 +84,28 @@ export const FeedList = () => {
 					</svg>
 					{isRefreshingAll ? '更新中...' : 'すべて更新'}
 				</button>
-			</div>
+			</header>
 
-			<div>
-				{filteredFeeds.length === 0 ? (
-					<p className="text-center text-gray-500 dark:text-gray-400 py-8">
-						{selectedCategoryId
-							? '選択したカテゴリーのフィードはありません'
-							: '登録されているフィードはありません'}
-					</p>
-				) : (
-					filteredFeeds.map((feed) => (
-						<div
+			{/* 見出しとリストの関連付け */}
+			<h2 id="feed-list-heading" className="text-lg font-semibold mb-2">
+				フィード一覧 ({filteredFeeds.length}件)
+			</h2>
+
+			{filteredFeeds.length === 0 ? (
+				<p className="text-center text-gray-500 dark:text-gray-400 py-8">
+					{selectedCategoryId
+						? '選択したカテゴリーのフィードはありません'
+						: '登録されているフィードはありません'}
+				</p>
+			) : (
+				<ul className="space-y-4" aria-labelledby="feed-list-heading">
+					{filteredFeeds.map((feed) => (
+						<li
 							key={feed.id}
 							className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow"
 						>
 							{editingFeed?.id === feed.id ? (
-								<div className="space-y-2">
+								<section className="space-y-2">
 									<input
 										type="text"
 										value={editingFeed.title}
@@ -130,16 +133,16 @@ export const FeedList = () => {
 											キャンセル
 										</button>
 									</div>
-								</div>
+								</section>
 							) : (
-								<div className="flex items-center justify-between">
+								<article className="flex items-center justify-between">
 									<div>
 										<h3 className="text-lg font-semibold">{feed.title}</h3>
 										<p className="text-sm text-gray-600 dark:text-gray-400">
 											{feed.url}
 										</p>
 									</div>
-									<div className="flex space-x-2">
+									<nav className="flex space-x-2">
 										<button
 											type="button"
 											onClick={() => setEditingFeed(feed)}
@@ -154,13 +157,13 @@ export const FeedList = () => {
 										>
 											削除
 										</button>
-									</div>
-								</div>
+									</nav>
+								</article>
 							)}
-						</div>
-					))
-				)}
-			</div>
-		</div>
+						</li>
+					))}
+				</ul>
+			)}
+		</main>
 	);
 };
