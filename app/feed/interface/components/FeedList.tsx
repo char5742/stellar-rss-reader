@@ -1,8 +1,8 @@
 import { useAtom } from 'jotai';
 import { useState } from 'react';
-import { useCategories } from '~/category/interface/hooks/useCategories';
 import { deleteFeed, updateFeed } from '~/feed/application/usecase';
 import type { Feed } from '~/feed/domain/types/feed';
+import { useCategories } from '~/feed/interface/hooks/useCategories';
 import { useFeeds } from '~/feed/interface/hooks/useFeeds';
 import { feedManagementAtom } from '~/feed/interface/stores/feedStore';
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useCategories } from '~/category/interface/hooks/useCategories';
 import { validateFeedUrl } from '~/feed/infrastructure/feed';
+import { useCategories } from '~/feed/interface/hooks/useCategories';
 import { useFeeds } from '~/feed/interface/hooks/useFeeds';
 
 export const AddFeedForm = () => {

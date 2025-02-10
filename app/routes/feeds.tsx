@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { CategoryManager } from '~/category/interface/components/CategoryManager';
+import { CategoryManager } from '~/feed/interface/components/CategoryManager';
 import { AddFeedForm } from '~/feed/interface/components/AddFeedForm';
 import { FeedList } from '~/feed/interface/components/FeedList';
 
