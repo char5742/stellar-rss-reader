@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useTheme } from '~/hooks/useTheme';
+import { useTheme } from '~/shared/interface/hooks/useTheme';
 
 export const Route = createFileRoute('/')({
 	component: HomeComponent,

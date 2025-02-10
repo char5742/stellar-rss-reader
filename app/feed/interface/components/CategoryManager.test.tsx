@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'bun:test';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { Provider } from 'jotai';
 import { useHydrateAtoms } from 'jotai/utils';
-import { categoriesAtom } from '~/stores/feedStore';
+import { categoriesAtom } from '~/feed/interface/stores/feedStore';
 import { CategoryManager } from './CategoryManager';
 
 const mockCategories = [
