@@ -11,7 +11,7 @@
 		"start": "vite",
 		"format": "biome check --write",
 		"lint": "biome lint",
-		"test": "bun test --preload ./src/test/setup.ts"
+		"test": "bun test"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
