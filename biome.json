@@ -7,15 +7,11 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": [
-			"node_modules",
-			"dist",
-			".vscode",
-			"*.gen.ts"
-		]
+		"ignore": ["node_modules", "dist", ".vscode", "*.gen.ts"]
 	},
 	"formatter": {
 		"enabled": true,
+		"indentWidth": 2,
 		"indentStyle": "tab"
 	},
 	"organizeImports": {

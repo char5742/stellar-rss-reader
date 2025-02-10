@@ -13,9 +13,18 @@
       "file": ".vscode/.copilot-commit-message-instructions.md"
     }
   ],
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
   "explorer.fileNesting.enabled": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.fixAll.biome": "explicit"
+  },
+  "editor.defaultFormatter": "biomejs.biome",
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
   },
 }
