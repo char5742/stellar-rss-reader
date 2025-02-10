@@ -1,6 +1,6 @@
-export type Theme = 'light' | 'dark' | 'system'
+export type Theme = 'light' | 'dark' | 'system';
 
 export interface ThemeConfig {
-  theme: Theme
-  systemTheme: 'light' | 'dark'
+	theme: Theme;
+	systemTheme: 'light' | 'dark';
 }

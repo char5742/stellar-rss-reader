@@ -1,24 +1,30 @@
 import * as React from 'react';
-import { Link, Outlet, createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
+import {
+	Link,
+	Outlet,
+	createRootRoute,
+	createRoute,
+	createRouter,
+} from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { RootLayout } from '../layouts/RootLayout';
 import { Index } from './index';
 import { About } from './about';
 
 const rootRoute = createRootRoute({
-  component: RootLayout,
+	component: RootLayout,
 });
 
 const indexRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/',
-  component: Index,
+	getParentRoute: () => rootRoute,
+	path: '/',
+	component: Index,
 });
 
 const aboutRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/about',
-  component: About,
+	getParentRoute: () => rootRoute,
+	path: '/about',
+	component: About,
 });
 
 const routeTree = rootRoute.addChildren([indexRoute, aboutRoute]);
@@ -26,14 +32,10 @@ const routeTree = rootRoute.addChildren([indexRoute, aboutRoute]);
 export const router = createRouter({ routeTree });
 
 declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
+	interface Register {
+		router: typeof router;
+	}
 }
-
-export const Route = createRootRoute({
-	component: RootComponent,
-});
 
 function RootComponent() {
 	return (
@@ -47,7 +49,7 @@ function RootComponent() {
 					activeOptions={{ exact: true }}
 				>
 					Home
-				</Link>{' '}
+				</Link>
 				<Link
 					to="/about"
 					activeProps={{

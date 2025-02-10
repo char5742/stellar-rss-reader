@@ -1,15 +1,11 @@
-import { useTheme } from '../hooks/useTheme'
+import { useTheme } from '../hooks/useTheme';
 
 interface RootLayoutProps {
-  children: React.ReactNode
+	children: React.ReactNode;
 }
 
 export const RootLayout = ({ children }: RootLayoutProps) => {
-  const { currentTheme } = useTheme()
+	const { currentTheme } = useTheme();
 
-  return (
-    <div className={`min-h-screen ${currentTheme}`}>
-      {children}
-    </div>
-  )
-}
+	return <div className={`min-h-screen ${currentTheme}`}>{children}</div>;
+};
