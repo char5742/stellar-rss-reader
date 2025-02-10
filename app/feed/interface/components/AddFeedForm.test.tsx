@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, spyOn } from 'bun:test';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { Provider } from 'jotai';
-import * as feedUtils from '~/utils/feed';
+import * as feedUtils from '~/feed/infrastructure/feed';
 import { AddFeedForm } from './AddFeedForm';
 
 describe('AddFeedForm', () => {

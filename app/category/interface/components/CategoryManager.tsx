@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useCategories } from '~/hooks/useCategories';
-import type { Category } from '~/types/feed';
+import { useCategories } from '~/category/interface/hooks/useCategories';
+import type { Category } from '~/feed/domain/types/feed';
 
 interface CategoryFormProps {
 	onSubmit: (name: string, color: string) => void;

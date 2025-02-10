@@ -1,10 +1,9 @@
 import { afterEach, describe, expect, it, spyOn } from 'bun:test';
 import { act, renderHook } from '@testing-library/react';
 import { Provider } from 'jotai';
-import type { Feed } from '~/types/feed';
-import * as feedUtils from '~/utils/feed';
+import type { Feed } from '~/feed/domain/types/feed';
+import * as feedUtils from '~/feed/infrastructure/feed';
 import { useFeeds } from './useFeeds';
-
 describe('useFeeds', () => {
 	const wrapper = ({ children }: { children: React.ReactNode }) => (
 		<Provider>{children}</Provider>

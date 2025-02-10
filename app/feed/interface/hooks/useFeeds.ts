@@ -1,12 +1,12 @@
 import { useAtom, useAtomValue } from 'jotai';
 import { nanoid } from 'nanoid';
+import type { Feed } from '~/feed/domain/types/feed';
+import { getFeedMetadata } from '~/feed/infrastructure/feed';
 import {
 	feedsAtom,
 	filteredFeedsAtom,
 	selectedCategoryIdAtom,
-} from '~/stores/feedStore';
-import type { Feed } from '~/types/feed';
-import { getFeedMetadata } from '~/utils/feed';
+} from '~/feed/interface/stores/feedStore';
 
 export const useFeeds = () => {
 	const [feeds, setFeeds] = useAtom(feedsAtom);
