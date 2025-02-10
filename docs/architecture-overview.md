@@ -4,13 +4,11 @@ app/
  ┃   ┣ domain/
  ┃   ┃   ┣ entities/
  ┃   ┃   ┣ services/
- ┃   ┃   ┣ events/
- ┃   ┃   ┗ IFeedRepository.ts
+ ┃   ┃   ┗ events/
  ┃   ┣ application/
  ┃   ┃   ┣ useCases/
  ┃   ┃   ┗ subscribers/
  ┃   ┣ infrastructure/
- ┃   ┃   ┗ FeedRepository.ts
  ┃   ┗ interface/
  ┃       ┣ router/
  ┃       ┣ components/
@@ -60,10 +58,6 @@ app/
   - その機能に特化した**ドメインイベント**を定義します。  
   - 例: `FeedCreatedEvent` / `FeedDeletedEvent` など。アプリケーション層に通知し、他集約や外部サービスとの連携を促します。
 
-- **`IFeedRepository.ts`** (あるいは `IArticleRepository.ts` など)  
-  - ドメイン層で必要とされるリポジトリの**インターフェイス**を定義し、インフラ層で実装を行います。  
-  - エンティティや値オブジェクトとやり取りするため、型定義はドメイン側が保持します。
-
 #### ポイント
 1. エンティティは「ドメインルール・整合性」を保つ中心  
 2. **不変条件**はエンティティ自身が破れないように、コンストラクタやメソッドでチェック  
@@ -90,10 +84,7 @@ app/
 ---
 
 ### 2.3. infrastructure
-
-- **`FeedRepository.ts`** (例)  
-  - `IFeedRepository` の具体実装を記述します。FirebaseやSQL、REST APIなど、技術的な詳細を扱います。  
-  - ドメイン側の`Feed`エンティティと**永続化用データ構造**の相互変換を行い、不整合がないように注意してください。  
+ 
 
 #### ポイント
 1. **外部サービスやDBとの接続**はインフラ層に隔離し、ドメイン層から直接アクセスさせない  
@@ -156,7 +147,7 @@ app/
 ## 4. より良い運用のためのポイント
 
 1. **ディレクトリの命名ルールを徹底する**  
-   - ファイル/クラス名も含めて、名前がブレると可読性が下がるため、`FeedRepository.ts` のように一貫した命名ポリシーを決める。
+   - ファイル/クラス名も含めて、名前がブレると可読性が下がるため、一貫性を保つことが重要です。
 
 2. **domainとinfrastructureを厳密に依存方向を分離する**  
    - `domain` → `infrastructure` の直接参照を避け、`infrastructure`から`domain`は参照してもよいが、その逆はしない。  
