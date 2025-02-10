@@ -5,10 +5,9 @@
 	"type": "module",
 	"scripts": {
 		"typecheck": "tsc --noEmit",
-		"dev": "vite --port=3001",
-		"build": "vite build",
-		"serve": "vite preview",
-		"start": "vite",
+		"dev": "vinxi dev",
+		"build": "vinxi build",
+		"start": "vinxi start",
 		"format": "biome check --write",
 		"lint": "biome lint",
 		"test": "bun test"
@@ -28,9 +27,11 @@
 	"dependencies": {
 		"@tanstack/react-router": "^1.102.1",
 		"@tanstack/router-devtools": "^1.102.1",
+		"@tanstack/start": "^1.102.1",
 		"jotai": "^2.11.3",
 		"nanoid": "^5.0.9",
 		"react": "^19.0.0",
-		"react-dom": "^19.0.0"
+		"react-dom": "^19.0.0",
+		"vinxi": "^0.5.3"
 	}
 }
