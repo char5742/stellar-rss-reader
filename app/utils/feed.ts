@@ -13,7 +13,7 @@ export class FeedError extends Error {
 
 export async function validateFeedUrl(url: string): Promise<boolean> {
 	try {
-		const response = await fetch(url);
+		const response = await fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
 		const contentType = response.headers.get('content-type');
 
 		if (!contentType) {
@@ -32,7 +32,7 @@ export async function validateFeedUrl(url: string): Promise<boolean> {
 
 export async function getFeedMetadata(url: string): Promise<FeedMetadata> {
 	try {
-		const response = await fetch(url);
+		const response = await fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
 		const text = await response.text();
 		const parser = new DOMParser();
 		const xmlDoc = parser.parseFromString(text, 'text/xml');
