@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import type { Category, Feed } from '~/feed/domain/types/feed';
+import type { Category, CategoryId, Feed } from '~/feed/domain/types/feed';
 
 // カテゴリーの永続化ストア
 export const categoriesAtom = atom<Category[]>([]);
@@ -8,7 +8,7 @@ export const categoriesAtom = atom<Category[]>([]);
 export const feedsAtom = atom<Feed[]>([]);
 
 // 選択中のカテゴリーID
-export const selectedCategoryIdAtom = atom<string | null>(null);
+export const selectedCategoryIdAtom = atom<CategoryId | null>(null);
 
 // フィルタリングされたフィード一覧を取得する派生atom
 export const filteredFeedsAtom = atom((get) => {

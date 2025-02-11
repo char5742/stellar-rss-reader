@@ -1,19 +1,28 @@
-export interface Feed {
-	id: string;
+const FeedIdBrand = Symbol();
+
+export type FeedId = string & { [FeedIdBrand]: undefined };
+
+export type Feed = Readonly<{
+	id: FeedId;
 	title: string;
 	url: string;
-	categoryIds: string[];
+	categoryIds: CategoryId[];
 	description?: string;
 	lastUpdated?: Date;
 	imageUrl?: string;
-}
+}>;
 
-export interface Category {
-	id: string;
+const CategoryIdBrand = Symbol();
+
+export type CategoryId = string & { [CategoryIdBrand]: undefined };
+
+export type Category = Readonly<{
+	id: CategoryId;
 	name: string;
 	color?: string;
-}
+}>;
 
-export interface FeedWithCategories extends Feed {
-	categories: Category[];
-}
+export type FeedWithCategories = Feed &
+	Readonly<{
+		categories: Category[];
+	}>;
